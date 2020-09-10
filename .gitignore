@@ -10,6 +10,8 @@
 !*.py
 !*.asm
 !*.zip
+!*.c
+!*.pptx
 
 # ...even if they are in subdirectories
 !*/
