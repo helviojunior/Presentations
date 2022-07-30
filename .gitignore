@@ -12,6 +12,8 @@
 !*.zip
 !*.c
 !*.pptx
+!*.md
+!*.apk
 
 # ...even if they are in subdirectories
 !*/
