@@ -230,3 +230,143 @@ Request request = new Request.Builder()
         .url("https://api1.mobilehacking.com.br/api/v1/generic/")
         .build();
 ```
+
+## Scripts criados na Live
+
+### App 002 - Bypass Flow control
+
+```java
+/*  
+    Arquivo pertencente ao treinamento de Hacking Mobile Application
+    Autor: Sec4US - Hélvio Junior (M4v3r1ck)
+
+    ** Proibida a reprodução ou publicação deste material sem prévia autorização expressa
+
+    Execute com:
+    frida -U -f br.com.mobileexploitation.a002flow -l mob_003_variaveis.js --no-pause
+*/
+
+Java.perform(function(){
+    console.log('');
+    console.log('======');
+    console.log('[#] Treinamento Mobile Hacking Application - Android [#]');
+    console.log('======');
+
+    var MainActivity = Java.use("br.com.mobileexploitation.a002flow.MainActivity");
+    var onCreate = MainActivity.onCreate.overload('android.os.Bundle');
+    onCreate.implementation = function(b1)
+    {
+        console.log("Hook em MainActivity.onCreate");
+
+        var mRedir = Java.use("java.lang.Boolean").$new("True");
+        var redirectActivity = MainActivity.class.getDeclaredField("redirectActivity");
+        redirectActivity.set(this, mRedir);
+
+        return onCreate.call(this, b1);
+    }
+
+
+});
+
+```
+
+### App 010 - Bypass Root Detection
+
+```java
+/*  
+    Arquivo pertencente ao treinamento de Hacking Mobile Application
+    Autor: Sec4US - Hélvio Junior (M4v3r1ck)
+
+    ** Proibida a reprodução ou publicação deste material sem prévia autorização expressa
+
+    Execute com:
+    frida -U -f br.com.mobileexploitation.app010_rootbeer -l mob_010_rootbeer.js --no-pause
+*/
+
+Java.perform(function(){
+    console.log('');
+    console.log('======');
+    console.log('[#] Treinamento Mobile Hacking Application - Android [#]');
+    console.log('======');
+
+
+    var RootBeer = Java.use("com.scottyab.rootbeer.RootBeer");
+    var isRooted = RootBeer.isRooted.overload();
+    isRooted.implementation = function()
+    {
+        console.log("Desabilitando RootBeer");
+
+        var b1 = Java.use("java.lang.Boolean").$new("False").booleanValue();
+
+        return b1;
+    }
+
+
+});
+```
+
+
+### App 007 - Bypass TLS Pinning
+
+```java
+/*  
+    Arquivo pertencente ao treinamento de Hacking Mobile Application
+    Autor: Sec4US - Hélvio Junior (M4v3r1ck)
+
+    ** Proibida a reprodução ou publicação deste material sem prévia autorização expressa
+
+    Execute com:
+    frida -U -f br.com.mobileexploitation.app007_pinning -l mob_007_pinning.js --no-pause
+*/
+
+Java.perform(function(){
+    console.log('');
+    console.log('======');
+    console.log('[#] Treinamento Mobile Hacking Application - Android [#]');
+    console.log('======');
+
+    var Pinner = Java.use("okhttp3.CertificatePinner$Builder");
+    var add = Pinner.add.overload('java.lang.String', '[Ljava.lang.String;');
+    add.implementation = function(a, b)
+    {
+        console.log("Desabilitando pinagem para " + a);
+
+        return add.call(this,'none',b);
+    }
+
+
+    //Trust Manager (Copiado do frida_multiple_unpinning)
+    var X509TrustManager = Java.use('javax.net.ssl.X509TrustManager');
+    var SSLContext = Java.use('javax.net.ssl.SSLContext');
+
+    // TrustManager (Android < 7) //
+    ////////////////////////////////
+    var TrustManager = Java.registerClass({
+        // Implement a custom TrustManager
+        name: 'dev.asd.test.TrustManager',
+        implements: [X509TrustManager],
+        methods: {
+            checkClientTrusted: function(chain, authType) {},
+            checkServerTrusted: function(chain, authType) {},
+            getAcceptedIssuers: function() {return []; }
+        }
+    });
+    // Prepare the TrustManager array to pass to SSLContext.init()
+    var TrustManagers = [TrustManager.$new()];
+    // Get a handle on the init() on the SSLContext class
+    var SSLContext_init = SSLContext.init.overload(
+        '[Ljavax.net.ssl.KeyManager;', '[Ljavax.net.ssl.TrustManager;', 'java.security.SecureRandom');
+    try {
+        // Override the init method, specifying the custom TrustManager
+        SSLContext_init.implementation = function(keyManager, trustManager, secureRandom) {
+            console.log('[+] Bypassing Trustmanager (Android < 7) pinner');
+            SSLContext_init.call(this, keyManager, TrustManagers, secureRandom);
+        };
+    } catch (err) {
+        console.log('[-] TrustManager (Android < 7) pinner not found');
+        //console.log(err);
+    }
+});
+
+```
+
