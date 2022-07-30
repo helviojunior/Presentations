@@ -243,7 +243,7 @@ Request request = new Request.Builder()
     ** Proibida a reprodução ou publicação deste material sem prévia autorização expressa
 
     Execute com:
-    frida -U -f br.com.mobileexploitation.a002flow -l mob_003_variaveis.js --no-pause
+    frida -U -f br.com.mobileexploitation.a002flow -l mob_002_flow.js --no-pause
 */
 
 Java.perform(function(){
