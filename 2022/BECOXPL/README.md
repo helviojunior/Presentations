@@ -13,7 +13,7 @@ Autor: Sec4US - Hélvio Junior (M4v3r1ck)
 
 Este mini treinamento foi realizado em 29/07/2022 em uma live para o Sexta Hack do beco do Exploit
 
-Segue o link da live no Youtube: https://www.youtube.com/c/sec4us
+Segue o link da live no Youtube: https://www.youtube.com/watch?v=9MM9Gphe0IY
 
 ## Listando devices
 
